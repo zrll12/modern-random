@@ -18,7 +18,6 @@ pub async fn get_config() -> Config {
                     max: 100,
                     select_type: NumberSelectType::Same,
                 },
-                words: Vec::new(),
             };
             save_config(config.clone()).await;
             config

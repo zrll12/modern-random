@@ -1,22 +1,35 @@
 'use client';
 
 import {
-    Button,
+    Button, CloseButton,
     Divider,
     Group,
-    MantineColorScheme, NumberInput,
+    MantineColorScheme, Modal, NumberInput,
     RangeSlider, ScrollArea,
     SegmentedControl,
-    Stack, Switch,
+    Stack, Switch, Table,
     useMantineColorScheme,
 } from '@mantine/core';
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { useDisclosure } from '@mantine/hooks';
 import { Config } from '@/model/Config';
+import ImportWords from '@/components/ImportWords/ImportWords';
 
 export default function DataPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
     const [checked, setChecked] = useState(false);
+    const [modify, setModify] = useState(false);
+    const [importOpened, importMovement] = useDisclosure(false);
+    const [files, setFiles] = useState<[string, number][]>([]);
+
+    const rows = files.map((element) => (
+        <Table.Tr key={element[0]}>
+            <Table.Td>{element[0]}</Table.Td>
+            <Table.Td>{element[1]}</Table.Td>
+            <Table.Td><CloseButton /></Table.Td>
+        </Table.Tr>
+    ));
 
     const sliderMarks = [
         { value: 20, label: '20' },
@@ -34,12 +47,17 @@ export default function DataPage() {
         },
         words: [],
     } as Config);
-    const [modify, setModify] = useState(false);
 
     async function updateNumberConfig() {
         const configStr: string = await invoke('get_config');
         const configStruct: Config = JSON.parse(configStr);
         setConfig(configStruct);
+    }
+
+    async function updateFileIndex() {
+        const res: string = await invoke('get_lists');
+        const result: [string, number][] = JSON.parse(res);
+        setFiles(result);
     }
 
     async function saveConfig() {
@@ -61,7 +79,6 @@ export default function DataPage() {
                     max,
                     select_type: c.number.select_type,
                 },
-                words: c.words,
             };
         });
     }
@@ -75,7 +92,6 @@ export default function DataPage() {
                 max: c.number.max,
                 select_type: value,
             },
-            words: c.words,
         }));
     }
 
@@ -88,7 +104,6 @@ export default function DataPage() {
                     max: c.number.max,
                     select_type: c.number.select_type,
                 },
-                words: c.words,
             }));
     }
 
@@ -101,7 +116,6 @@ export default function DataPage() {
                     max: value as number,
                     select_type: c.number.select_type,
                 },
-                words: c.words,
             }));
     }
 
@@ -110,13 +124,20 @@ export default function DataPage() {
         setConfig((c) => ({
             color: value,
             number: c.number,
-            words: c.words,
         }));
         setModify(true);
     }
 
+    function handleFinishCreateFile() {
+        updateFileIndex().then(() => {});
+        importMovement.close();
+    }
+
     useState(async () => {
-        await updateNumberConfig();
+        updateNumberConfig()
+             .then(() => {});
+        updateFileIndex()
+             .then(() => {});
     });
 
     return (
@@ -168,6 +189,25 @@ export default function DataPage() {
 
                 <Stack>
                     <h3>单词</h3>
+                    <Group>
+                        <Modal opened={importOpened} onClose={importMovement.close} title="导入">
+                            <ImportWords onClose={handleFinishCreateFile} />
+                        </Modal>
+
+                        <Table>
+                            <Table.Thead>
+                                <Table.Tr>
+                                    <Table.Th>词汇表名</Table.Th>
+                                    <Table.Th>词汇数目</Table.Th>
+                                    <Table.Th />
+                                </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>
+                                {rows}
+                            </Table.Tbody>
+                        </Table>
+                        <Button onClick={importMovement.open}>导入单词表</Button>
+                    </Group>
                 </Stack>
 
                 <Stack>

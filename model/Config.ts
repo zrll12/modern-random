@@ -1,7 +1,6 @@
 export interface Config {
     color: string
     number: Number
-    words: any[]
 }
 
 export interface Number {

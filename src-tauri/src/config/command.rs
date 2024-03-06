@@ -11,7 +11,6 @@ pub async fn set_config(config: String) {
 
     let mut config = CONFIG.lock().unwrap();
     config.number = new_config.number.clone();
-    config.words = new_config.words.clone();
 
     drop(config);
 }
