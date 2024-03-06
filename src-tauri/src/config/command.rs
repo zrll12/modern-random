@@ -4,7 +4,6 @@ use crate::config::model::{Config};
 
 #[tauri::command]
 pub async fn set_config(config: String) {
-    println!("{}", config);
     let new_config: Config = serde_json::from_slice(&config.as_bytes()).unwrap();
 
     save_config(new_config.clone()).await;
@@ -24,6 +23,5 @@ pub async fn get_config() -> String {
 #[tauri::command]
 pub fn get_color() -> String {
     let config = &CONFIG.lock().unwrap();
-    println!("{config:?}");
     config.color.clone()
 }

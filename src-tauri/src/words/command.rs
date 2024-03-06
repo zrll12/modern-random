@@ -2,7 +2,6 @@ use crate::words::fs::{get_list_names, read_list, write_list};
 
 #[tauri::command]
 pub async fn create_list(list: String, name: String) -> usize {
-    println!("{name:?}, {list:?}");
     write_list(&list, &name).await
 }
 

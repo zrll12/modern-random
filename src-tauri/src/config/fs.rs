@@ -24,8 +24,6 @@ pub async fn get_config() -> Config {
         }
     };
 
-    println!("{}", serde_json::to_string(&config).unwrap());
-
     config
 }
 
