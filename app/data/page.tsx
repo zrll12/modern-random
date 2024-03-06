@@ -8,7 +8,7 @@ import {
     RangeSlider, ScrollArea,
     SegmentedControl,
     Stack, Switch,
-    useMantineColorScheme
+    useMantineColorScheme,
 } from '@mantine/core';
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
@@ -81,8 +81,7 @@ export default function DataPage() {
 
     function onNumberMinChange(value: string | number) {
         setModify(true);
-        setConfig((c) => {
-            return {
+        setConfig((c) => ({
                 color: c.color,
                 number: {
                     min: value as number,
@@ -90,14 +89,12 @@ export default function DataPage() {
                     select_type: c.number.select_type,
                 },
                 words: c.words,
-            };
-        });
+            }));
     }
 
     function onNumberMaxChange(value: string | number) {
         setModify(true);
-        setConfig((c) => {
-            return {
+        setConfig((c) => ({
                 color: c.color,
                 number: {
                     min: c.number.min,
@@ -105,8 +102,7 @@ export default function DataPage() {
                     select_type: c.number.select_type,
                 },
                 words: c.words,
-            };
-        });
+            }));
     }
 
     function handleColorSchemeChange(value: string) {
@@ -131,41 +127,41 @@ export default function DataPage() {
                     <Group>
                         学号范围
                         <RangeSlider
-                            marks={sliderMarks}
-                            miw={400}
-                            value={config === {} as Config ?
+                          marks={sliderMarks}
+                          miw={400}
+                          value={config === {} as Config ?
                                 [0, 100] : [config.number.min, config.number.max]}
-                            onChange={onNumberChange}
-                            maw={400}
+                          onChange={onNumberChange}
+                          maw={400}
                         />
                     </Group>
                     <Group>
                         <NumberInput
-                            placeholder="min"
-                            value={config.number.min}
-                            onChange={onNumberMinChange}
-                            min={0}
-                            max={config.number.max - 10}
+                          placeholder="min"
+                          value={config.number.min}
+                          onChange={onNumberMinChange}
+                          min={0}
+                          max={config.number.max - 10}
                         />
                         -
                         <NumberInput
-                            placeholder="max"
-                            value={config.number.max}
-                            onChange={onNumberMaxChange}
-                            min={config.number.min + 10}
-                            max={100}
+                          placeholder="max"
+                          value={config.number.max}
+                          onChange={onNumberMaxChange}
+                          min={config.number.min + 10}
+                          max={100}
                         />
                     </Group>
                     <Group>
                         抽取学号
                         <SegmentedControl
-                            data={[
+                          data={[
                                 { value: 'None', label: '不抽取' },
                                 { value: 'One', label: '抽取一名' },
                                 { value: 'Same', label: '同单词抽取数量' },
                             ]}
-                            value={config.number.select_type}
-                            onChange={onNumberSelectChange}
+                          value={config.number.select_type}
+                          onChange={onNumberSelectChange}
                         />
                     </Group>
                 </Stack>
@@ -179,20 +175,21 @@ export default function DataPage() {
                     <Group>
                         颜色模式
                         <SegmentedControl
-                            data={[
+                          data={[
                                 { value: 'light', label: '浅色' },
                                 { value: 'dark', label: '深色' },
                                 { value: 'auto', label: '自动' },
                             ]}
-                            value={colorScheme}
-                            onChange={handleColorSchemeChange}/>
+                          value={colorScheme}
+                          onChange={handleColorSchemeChange}
+                        />
                     </Group>
 
                     <Group>
                         调试模式
                         <Switch
-                            checked={checked}
-                            onChange={(value) => { setChecked(value.target.checked) }}
+                          checked={checked}
+                          onChange={(value) => { setChecked(value.target.checked); }}
                         />
                     </Group>
 
@@ -202,7 +199,7 @@ export default function DataPage() {
             <Divider />
 
             <Group justify="flex-end">
-                { checked ? JSON.stringify(config) : ""}
+                { checked ? JSON.stringify(config) : ''}
 
                 <Button
                   color="red"
@@ -213,12 +210,11 @@ export default function DataPage() {
                                 setModify(false);
                             });
                     }}
-                  disabled={!modify}>取消
+                  disabled={!modify}
+                >取消
                 </Button>
                 <Button disabled={!modify} onClick={saveConfig}>保存</Button>
             </Group>
-
-            {/*{JSON.stringify(config)}*/}
         </Stack>
     );
 }
