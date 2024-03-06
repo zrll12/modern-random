@@ -1,7 +1,7 @@
 {
-  "productName": "mantine-next-template",
+  "productName": "random",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "cc.vastsea.zrll.random",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "mantine-next-template",
+        "title": "random",
         "width": 800,
         "height": 600,
         "resizable": true,
