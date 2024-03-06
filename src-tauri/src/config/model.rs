@@ -2,18 +2,18 @@ use serde::{Deserialize, Serialize};
 use serde_inline_default::serde_inline_default;
 
 #[serde_inline_default]
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Config {
     #[serde_inline_default(String::from("auto"))]
     pub color: String,
     #[serde(default="generate_number_config")]
     pub number: NumberConfig,
     #[serde_inline_default(Vec::new())]
-    pub words: Vec<String>,
+    pub words: Vec<WordsConfig>,
 }
 
 #[serde_inline_default]
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NumberConfig {
     #[serde_inline_default(0)]
     pub min: u8,
@@ -23,7 +23,16 @@ pub struct NumberConfig {
     pub select_type: NumberSelectType
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[serde_inline_default]
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct WordsConfig {
+    #[serde_inline_default(String::from(""))]
+    pub name: String,
+    #[serde_inline_default(0)]
+    pub size: u8,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum NumberSelectType {
     None,
     One,

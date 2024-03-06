@@ -3,11 +3,27 @@ use crate::config;
 use crate::config::model::{Config, NumberConfig, NumberSelectType};
 
 pub async fn get_config() -> Config {
-    let vec = match fs::read("config.bson") {
+    let vec = match fs::read("config.json") {
         Ok(a) => { a }
         Err(_) => { Vec::new() }
     };
-    let config = bson::from_slice(&vec).unwrap();
+    let config = match serde_json::from_slice::<Config>(&vec) {
+        Ok(a) => { a }
+        Err(e) => {
+            println!("{:?}", e);
+            let config = Config {
+                color: "auto".to_string(),
+                number: NumberConfig {
+                    min: 0,
+                    max: 100,
+                    select_type: NumberSelectType::Same,
+                },
+                words: Vec::new(),
+            };
+            save_config(config.clone()).await;
+            config
+        }
+    };
 
     println!("{}", serde_json::to_string(&config).unwrap());
 
@@ -15,7 +31,7 @@ pub async fn get_config() -> Config {
 }
 
 pub async fn save_config(config: Config) {
-    let config_str = bson::to_vec(&config).unwrap();
+    let config_str = serde_json::to_vec(&config).unwrap();
 
-    fs::write("config.bson", config_str).unwrap()
+    fs::write("config.json", config_str).unwrap()
 }

@@ -11,15 +11,16 @@ export function ColorSchemeToggle() {
 
   return (
       <>
-          <Group justify="center"><SegmentedControl
-            data={[
-                  { value: 'light', label: '浅色' },
-                  { value: 'dark', label: '深色' },
-                  { value: 'auto', label: '自动' },
-              ]}
-            value={colorScheme}
-            onChange={handleColorSchemeChange}
-          />
+          <Group justify="center">
+              <SegmentedControl
+                  data={[
+                      { value: 'light', label: '浅色' },
+                      { value: 'dark', label: '深色' },
+                      { value: 'auto', label: '自动' },
+                  ]}
+                  value={colorScheme}
+                  onChange={handleColorSchemeChange}
+              />
           </Group>
       </>
     // <Group justify="center" mt="xl">
