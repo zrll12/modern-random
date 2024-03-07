@@ -1,16 +1,16 @@
 'use client';
 
-import {MantineColorScheme, useMantineColorScheme} from '@mantine/core';
-import {ColorSchemeToggle} from "@/components/ColorSchemeToggle/ColorSchemeToggle";
-import {Welcome} from "@/components/Welcome/Welcome";
-import {useEffect, useState} from "react";
-import {invoke} from "@tauri-apps/api/core";
+import { MantineColorScheme, useMantineColorScheme } from '@mantine/core';
+import { useEffect } from 'react';
+import { invoke } from '@tauri-apps/api/core';
+import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
+import { Welcome } from '@/components/Welcome/Welcome';
 
 export default function HomePage() {
     const { setColorScheme } = useMantineColorScheme();
 
     useEffect(() => {
-        let color = invoke("get_color").then((color) => {
+         invoke('get_color').then((color) => {
             console.log(color);
             setColorScheme(color as MantineColorScheme);
         });

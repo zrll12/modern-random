@@ -1,6 +1,6 @@
-use crate::config::CONFIG;
 use crate::config::fs::save_config;
-use crate::config::model::{Config};
+use crate::config::model::Config;
+use crate::config::CONFIG;
 
 #[tauri::command]
 pub async fn set_config(config: String) {

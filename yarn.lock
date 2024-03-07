@@ -4603,6 +4603,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tauri-apps/plugin-fs@npm:^2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@tauri-apps/plugin-fs@npm:2.0.0-beta.1"
+  dependencies:
+    "@tauri-apps/api": "npm:2.0.0-beta.2"
+  checksum: d371ddee61571bf5172af55c94447709da758448750cb98427aca4311d7a9932351914b0307f470ddc5f40e18027691d2f03613faf6354191686abb0178951c1
+  languageName: node
+  linkType: hard
+
+"@tauri-apps/plugin-os@npm:^2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@tauri-apps/plugin-os@npm:2.0.0-beta.1"
+  dependencies:
+    "@tauri-apps/api": "npm:2.0.0-beta.2"
+  checksum: 8f51852516860354975ad1e36adf5776e491a7d13d019b16936639acece3b89a91a1292ae7fa07918b191986a8355ec9f13ac3ec3c5fc21ebfcb6d088df48aaf
+  languageName: node
+  linkType: hard
+
 "@tauri-apps/plugin-shell@npm:>=2.0.0-beta.0":
   version: 2.0.0-beta.1
   resolution: "@tauri-apps/plugin-shell@npm:2.0.0-beta.1"
@@ -11592,6 +11610,8 @@ __metadata:
     "@tabler/icons-react": "npm:^2.40.0"
     "@tauri-apps/api": "npm:>=2.0.0-beta.0"
     "@tauri-apps/cli": "npm:^2.0.0-beta.6"
+    "@tauri-apps/plugin-fs": "npm:^2.0.0-beta.1"
+    "@tauri-apps/plugin-os": "npm:^2.0.0-beta.1"
     "@tauri-apps/plugin-shell": "npm:>=2.0.0-beta.0"
     "@testing-library/dom": "npm:^9.3.3"
     "@testing-library/jest-dom": "npm:^6.1.4"

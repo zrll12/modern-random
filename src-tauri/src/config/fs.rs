@@ -1,14 +1,11 @@
-use std::fs;
-use crate::config;
 use crate::config::model::{Config, NumberConfig, NumberSelectType};
+use std::fs;
+use crate::BASE_DIR;
 
 pub async fn get_config() -> Config {
-    let vec = match fs::read("config.json") {
-        Ok(a) => { a }
-        Err(_) => { Vec::new() }
-    };
+    let vec = fs::read(BASE_DIR.join("config.json")).unwrap_or_else(|_| Vec::new());
     let config = match serde_json::from_slice::<Config>(&vec) {
-        Ok(a) => { a }
+        Ok(a) => a,
         Err(e) => {
             println!("{:?}", e);
             let config = Config {
@@ -30,5 +27,5 @@ pub async fn get_config() -> Config {
 pub async fn save_config(config: Config) {
     let config_str = serde_json::to_vec(&config).unwrap();
 
-    fs::write("config.json", config_str).unwrap()
+    fs::write(BASE_DIR.join("config.json"), config_str).unwrap()
 }
