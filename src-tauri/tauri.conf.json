@@ -31,7 +31,17 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "windows": {
+      "allowDowngrades": false,
+      "nsis": {
+        "languages": ["SimpChinese", "English"],
+        "displayLanguageSelector": true
+      },
+      "wix": {
+        "language": ["zh-CN", "en-US"]
+      }
+    }
   },
   "$schema": "../node_modules/@tauri-apps/cli/schema.json"
 }
