@@ -8,9 +8,9 @@ pub async fn generate(name: Option<String>, num_generates: u64, max_number: u64,
     }
     let name = name.unwrap();
     
-    match generate_mode {
+    return match generate_mode {
         NumberSelectType::None => { serde_json::to_string(&generate_none(num_generates, max_number, &name).await).unwrap() } // Vec<(u64, String, String)>
         NumberSelectType::One => { serde_json::to_string(&generate_one(num_generates, max_number, &name).await).unwrap() } // Vec<(u64, String, String)>
         NumberSelectType::Same => { serde_json::to_string(&generate_same(num_generates, max_number, &name).await).unwrap() } // Vec<(u64, String, String)>
-    }
+    };
 }

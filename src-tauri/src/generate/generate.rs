@@ -1,3 +1,4 @@
+use futures::executor::block_on;
 use crate::generate::{CURRENT_LIST, CURRENT_NUMBER, CURRENT_NUMBER_LIST};
 use crate::generate::load::load_list;
 
@@ -18,7 +19,8 @@ pub async fn generate_same(num: u64, max: u64, name: &str) -> Vec<(u64, String, 
 
     for _ in 0..num {
         if current_list.is_empty() {
-            load_list(name).await;
+            current_list.clear();
+            current_list.extend(block_on(load_list(name)));
         }
 
         if current_number_list.is_empty() {
@@ -67,7 +69,8 @@ pub async fn generate_one(num: u64, max: u64, name: &str) -> Vec<(u64, String, S
 
     for _ in 0..num {
         if current_list.is_empty() {
-            load_list(name).await;
+            current_list.clear();
+            current_list.extend(block_on(load_list(name)));
         }
 
         let list = current_list.pop().unwrap();
@@ -96,7 +99,8 @@ pub async fn generate_none(num: u64, max: u64, name: &str) -> Vec<(u64, String, 
 
     for _ in 0..num {
         if current_list.is_empty() {
-            load_list(name).await;
+            current_list.clear();
+            current_list.extend(block_on(load_list(name)));
         }
 
         let list = current_list.pop().unwrap();
