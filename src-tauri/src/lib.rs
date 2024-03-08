@@ -29,6 +29,7 @@ pub fn run() {
             words::command::fetch_list,
             words::command::get_lists,
             words::command::remove_list,
+            generate::command::generate,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

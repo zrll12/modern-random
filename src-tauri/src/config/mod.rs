@@ -6,7 +6,7 @@ use std::sync::Mutex;
 
 pub mod command;
 mod fs;
-mod model;
+pub mod model;
 
 lazy_static! {
     static ref CONFIG: Mutex<Config> = Mutex::new(block_on(get_config()));
