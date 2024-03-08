@@ -23,14 +23,6 @@ export default function DataPage() {
     const [importOpened, importMovement] = useDisclosure(false);
     const [files, setFiles] = useState<[string, number][]>([]);
 
-    const rows = files.map((element) => (
-        <Table.Tr key={element[0]}>
-            <Table.Td>{element[0]}</Table.Td>
-            <Table.Td>{element[1]}</Table.Td>
-            <Table.Td><CloseButton /></Table.Td>
-        </Table.Tr>
-    ));
-
     const sliderMarks = [
         { value: 20, label: '20' },
         { value: 40, label: '40' },
@@ -45,13 +37,13 @@ export default function DataPage() {
             max: 100,
             select_type: 'None',
         },
-        words: [],
     } as Config);
 
     async function updateNumberConfig() {
         const configStr: string = await invoke('get_config');
         const configStruct: Config = JSON.parse(configStr);
         setConfig(configStruct);
+        setColorScheme(configStruct.color as MantineColorScheme);
     }
 
     async function updateFileIndex() {
@@ -133,6 +125,25 @@ export default function DataPage() {
         importMovement.close();
     }
 
+    const rows = files.map((element) => (
+        <Table.Tr key={element[0]}>
+            <Table.Td>{element[0]}</Table.Td>
+            <Table.Td>{element[1] / 1024 / 1024 > 1 ?
+                `${(element[1] / 1024 / 1024).toFixed(3)} MB` :
+                `${(element[1] / 1024).toFixed(3)} KB`}
+            </Table.Td>
+            <Table.Td>
+                <CloseButton onClick={() => {
+                    invoke('remove_list', { name: element[0] })
+                        .then(() => {
+                            updateFileIndex().then(() => {});
+                        });
+                }}
+                />
+            </Table.Td>
+        </Table.Tr>
+    ));
+
     useState(async () => {
         updateNumberConfig()
              .then(() => {});
@@ -177,8 +188,8 @@ export default function DataPage() {
                         抽取学号
                         <SegmentedControl
                           data={[
-                                { value: 'None', label: '不抽取' },
-                                { value: 'One', label: '抽取一名' },
+                                { value: 'None', label: '不抽取', disabled: files.length === 0 },
+                                { value: 'One', label: '抽取一名', disabled: files.length === 0 },
                                 { value: 'Same', label: '同单词抽取数量' },
                             ]}
                           value={config.number.select_type}
@@ -198,7 +209,7 @@ export default function DataPage() {
                             <Table.Thead>
                                 <Table.Tr>
                                     <Table.Th>词汇表名</Table.Th>
-                                    <Table.Th>词汇数目</Table.Th>
+                                    <Table.Th>词汇表大小</Table.Th>
                                     <Table.Th />
                                 </Table.Tr>
                             </Table.Thead>

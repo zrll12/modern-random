@@ -2,17 +2,17 @@ use futures::executor::block_on;
 use crate::generate::{CURRENT_LIST, CURRENT_NUMBER, CURRENT_NUMBER_LIST};
 use crate::generate::load::load_list;
 
-pub async fn generate_same(num: u64, max: u64, name: &str) -> Vec<(u64, String, String)> {
+pub async fn generate_same(num: u64, min: u64, max: u64, name: &str) -> Vec<(u64, String, String)> {
     let mut current_list = CURRENT_LIST.lock().unwrap();
     let mut current_number = CURRENT_NUMBER.lock().unwrap();
     let mut current_number_list = CURRENT_NUMBER_LIST.lock().unwrap();
     let mut res_list = Vec::new();
 
-    if *current_number != max {
-        let mut new_list: Vec<u64> = (0..max).collect();
+    if *current_number != (min, max) {
+        let mut new_list: Vec<u64> = (min..max).collect();
         fastrand::shuffle(&mut new_list);
 
-        *current_number = max;
+        *current_number = (min, max);
         current_number_list.clear();
         current_number_list.extend(new_list);
     }
@@ -24,7 +24,7 @@ pub async fn generate_same(num: u64, max: u64, name: &str) -> Vec<(u64, String, 
         }
 
         if current_number_list.is_empty() {
-            let mut new_list: Vec<u64> = (0..max).collect();
+            let mut new_list: Vec<u64> = (min..max).collect();
             fastrand::shuffle(&mut new_list);
 
             current_number_list.clear();
@@ -40,24 +40,24 @@ pub async fn generate_same(num: u64, max: u64, name: &str) -> Vec<(u64, String, 
     res_list
 }
 
-pub async fn generate_one(num: u64, max: u64, name: &str) -> Vec<(u64, String, String)> {
+pub async fn generate_one(num: u64, min: u64, max: u64, name: &str) -> Vec<(u64, String, String)> {
     let mut current_list = CURRENT_LIST.lock().unwrap();
     let mut current_number = CURRENT_NUMBER.lock().unwrap();
     let mut current_number_list = CURRENT_NUMBER_LIST.lock().unwrap();
     let mut res_list = Vec::new();
 
-    if *current_number != max {
-        let mut new_list: Vec<u64> = (0..max).collect();
+    if *current_number != (min, max) {
+        let mut new_list: Vec<u64> = (min..max).collect();
         fastrand::shuffle(&mut new_list);
 
-        *current_number = max;
+        *current_number = (min, max);
         current_number_list.clear();
         current_number_list.extend(new_list);
     }
 
 
     if current_number_list.is_empty() {
-        let mut new_list: Vec<u64> = (0..max).collect();
+        let mut new_list: Vec<u64> = (min..max).collect();
         fastrand::shuffle(&mut new_list);
 
         current_number_list.clear();
@@ -81,21 +81,9 @@ pub async fn generate_one(num: u64, max: u64, name: &str) -> Vec<(u64, String, S
     res_list
 }
 
-pub async fn generate_none(num: u64, max: u64, name: &str) -> Vec<(u64, String, String)> {
+pub async fn generate_none(num: u64, name: &str) -> Vec<(u64, String, String)> {
     let mut current_list = CURRENT_LIST.lock().unwrap();
-    let mut current_number = CURRENT_NUMBER.lock().unwrap();
-    let mut current_number_list = CURRENT_NUMBER_LIST.lock().unwrap();
     let mut res_list = Vec::new();
-
-    if *current_number != max {
-        let mut new_list: Vec<u64> = (0..max).collect();
-        fastrand::shuffle(&mut new_list);
-
-        *current_number = max;
-        current_number_list.clear();
-        current_number_list.extend(new_list);
-    }
-
 
     for _ in 0..num {
         if current_list.is_empty() {
@@ -111,16 +99,16 @@ pub async fn generate_none(num: u64, max: u64, name: &str) -> Vec<(u64, String, 
     res_list
 }
 
-pub async fn generate_only(num: u64, max: u64) -> Vec<u64> {
+pub async fn generate_only(num: u64, min: u64, max: u64) -> Vec<u64> {
     let mut current_number = CURRENT_NUMBER.lock().unwrap();
     let mut current_number_list = CURRENT_NUMBER_LIST.lock().unwrap();
     let mut res_list = Vec::new();
 
-    if *current_number != max {
-        let mut new_list: Vec<u64> = (0..max).collect();
+    if *current_number != (min, max) {
+        let mut new_list: Vec<u64> = (min..max).collect();
         fastrand::shuffle(&mut new_list);
 
-        *current_number = max;
+        *current_number = (min, max);
         current_number_list.clear();
         current_number_list.extend(new_list);
     }
@@ -128,7 +116,7 @@ pub async fn generate_only(num: u64, max: u64) -> Vec<u64> {
     for _ in 0..num {
 
         if current_number_list.is_empty() {
-            let mut new_list: Vec<u64> = (0..max).collect();
+            let mut new_list: Vec<u64> = (min..max).collect();
             fastrand::shuffle(&mut new_list);
 
             current_number_list.clear();
