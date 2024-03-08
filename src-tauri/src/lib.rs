@@ -7,6 +7,7 @@ use tauri_plugin_os::platform;
 
 mod config;
 mod words;
+mod generate;
 
 lazy_static!{
     static ref BASE_DIR: PathBuf = get_base_dir();
@@ -27,6 +28,7 @@ pub fn run() {
             words::command::create_list,
             words::command::fetch_list,
             words::command::get_lists,
+            words::command::remove_list,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

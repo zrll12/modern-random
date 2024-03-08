@@ -57,3 +57,8 @@ pub async fn get_list_names() -> Vec<(String, u64)> {
     }
     names
 }
+
+pub async fn delete_list(name: &str) {
+    fs::remove_file(WORDS_DIR.clone().join(name)).unwrap();
+    WORDS_CACHE.remove(name).await;
+}
