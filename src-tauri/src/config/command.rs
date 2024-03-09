@@ -1,3 +1,4 @@
+use crate::BASE_DIR;
 use crate::config::fs::save_config;
 use crate::config::model::Config;
 use crate::config::CONFIG;
@@ -24,4 +25,9 @@ pub async fn get_config() -> String {
 pub fn get_color() -> String {
     let config = &CONFIG.lock().unwrap();
     config.color.clone()
+}
+
+#[tauri::command]
+pub fn get_base_dir() -> String {
+    return BASE_DIR.to_str().unwrap().to_string();
 }

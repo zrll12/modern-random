@@ -7,7 +7,7 @@ import {
     MantineColorScheme, Modal, NumberInput,
     RangeSlider, ScrollArea,
     SegmentedControl,
-    Stack, Switch, Table,
+    Stack, Switch, Table, Text,
     useMantineColorScheme,
 } from '@mantine/core';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ export default function DataPage() {
     const [modify, setModify] = useState(false);
     const [importOpened, importMovement] = useDisclosure(false);
     const [files, setFiles] = useState<[string, number][]>([]);
+    const [baseDir, setBaseDir] = useState('' as string);
 
     const sliderMarks = [
         { value: 20, label: '20' },
@@ -149,6 +150,8 @@ export default function DataPage() {
              .then(() => {});
         updateFileIndex()
              .then(() => {});
+        invoke('get_base_dir')
+            .then((value) => { setBaseDir(value as string); });
     });
 
     return (
@@ -243,15 +246,19 @@ export default function DataPage() {
                           onChange={(value) => { setChecked(value.target.checked); }}
                         />
                     </Group>
-
                 </Stack>
+
+                { checked ?
+                    <Stack>
+                        <h3>调试信息</h3>
+                        <Text>{JSON.stringify(config)}</Text>
+                        <Text>{baseDir}</Text>
+                    </Stack> : <></>}
             </ScrollArea>
 
             <Divider />
 
             <Group justify="flex-end">
-                { checked ? JSON.stringify(config) : ''}
-
                 <Button
                   color="red"
                   variant="light"

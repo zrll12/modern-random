@@ -25,6 +25,7 @@ pub fn run() {
             config::command::set_config,
             config::command::get_config,
             config::command::get_color,
+            config::command::get_base_dir,
             words::command::create_list,
             words::command::fetch_list,
             words::command::get_lists,
