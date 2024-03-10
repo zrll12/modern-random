@@ -66,8 +66,8 @@ export default function RandomPicker() {
             {current === null && <Table.Th>{item}</Table.Th>}
             {current !== null && config.number.select_type === 'None' &&
                 <>
-                    <Table.Th>{item[0]}</Table.Th>
-                    { showAnswer && <Table.Th>{item[1]}</Table.Th> }
+                    <Table.Th>{item[1]}</Table.Th>
+                    { showAnswer && <Table.Th>{item[2]}</Table.Th> }
                 </>}
             {current !== null && config.number.select_type !== 'None' &&
                 <>

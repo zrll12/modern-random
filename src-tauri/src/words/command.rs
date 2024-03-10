@@ -1,8 +1,15 @@
 use crate::words::fs::{delete_list, get_list_names, read_list, write_list};
 
 #[tauri::command]
-pub async fn create_list(list: String, name: String) -> usize {
-    write_list(&list, &name).await
+pub async fn create_list_from_json(list: String, name: String) -> usize {
+    let listed: Vec<(String, String)> = serde_json::from_str(&list).unwrap();
+    write_list(listed, &name).await
+}
+
+#[tauri::command]
+pub async fn create_list_from_csv(list: String, name: String) -> usize {
+    let listed = crate::words::csv::parse_from_csv(&list);
+    write_list(listed, &name).await
 }
 
 #[tauri::command]

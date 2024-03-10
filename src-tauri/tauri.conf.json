@@ -14,9 +14,7 @@
         "title": "random",
         "width": 800,
         "height": 600,
-        "resizable": false,
-        "fullscreen": false,
-        "maximizable": false
+        "resizable": false
       }
     ],
     "security": {

@@ -12,8 +12,7 @@ lazy_static! {
         .build();
 }
 
-pub async fn write_list(list: &str, name: &str) -> usize {
-    let listed: Vec<(String, String)> = serde_json::from_str(&list).unwrap();
+pub async fn write_list(listed: Vec<(String, String)>, name: &str) -> usize {
     let len = listed.len();
 
     fs::write(
