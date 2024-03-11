@@ -28,7 +28,11 @@ export default function ImportWords(props: ImportWordsProps) {
 
     function uploadFile(value: File | null) {
         if (!value) return;
-        if (!value.type.includes('json') && !value.type.includes('csv')) return;
+        if (value.type.includes('json')) {
+            setType('json');
+        } else if (value.type.includes('csv')) {
+            setType('csv');
+        } else return;
         value.text()
             .then((texts) => {
                 setContent(texts);
