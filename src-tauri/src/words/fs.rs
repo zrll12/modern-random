@@ -14,12 +14,16 @@ lazy_static! {
 
 pub async fn write_list(listed: Vec<(String, String)>, name: &str) -> Result<usize, String> {
     let len = listed.len();
+    let checked: Vec<(String, String)> = listed
+        .into_iter()
+        .filter(|(a, b)| a.len() > 0 && b.len() > 0)
+        .collect();
 
     fs::write(
         WORDS_DIR.clone().join(name),
-        serde_json::to_string(&listed).unwrap(),
+        serde_json::to_string(&checked).unwrap(),
     ).map_err(|e| {e.to_string()})?;
-    WORDS_CACHE.insert(name.to_string(), listed).await;
+    WORDS_CACHE.insert(name.to_string(), checked).await;
 
     Ok(len)
 }
