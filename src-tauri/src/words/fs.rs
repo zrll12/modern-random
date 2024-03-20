@@ -12,17 +12,16 @@ lazy_static! {
         .build();
 }
 
-pub async fn write_list(listed: Vec<(String, String)>, name: &str) -> usize {
+pub async fn write_list(listed: Vec<(String, String)>, name: &str) -> Result<usize, String> {
     let len = listed.len();
 
     fs::write(
         WORDS_DIR.clone().join(name),
         serde_json::to_string(&listed).unwrap(),
-    )
-    .unwrap();
+    ).map_err(|e| {e.to_string()})?;
     WORDS_CACHE.insert(name.to_string(), listed).await;
 
-    len
+    Ok(len)
 }
 
 pub async fn read_list(name: &str) -> Vec<(String, String)> {

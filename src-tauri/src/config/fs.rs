@@ -1,3 +1,4 @@
+use std::fmt::format;
 use crate::config::model::{Config, NumberConfig, NumberSelectType};
 use std::fs;
 use crate::BASE_DIR;
@@ -16,7 +17,7 @@ pub async fn get_config() -> Config {
                     select_type: NumberSelectType::Same,
                 },
             };
-            save_config(config.clone()).await;
+            save_config(config.clone()).await.unwrap();
             config
         }
     };
@@ -24,8 +25,10 @@ pub async fn get_config() -> Config {
     config
 }
 
-pub async fn save_config(config: Config) {
+pub async fn save_config(config: Config) -> Result<(), String>{
     let config_str = serde_json::to_vec(&config).unwrap();
 
-    fs::write(BASE_DIR.join("config.json"), config_str).unwrap()
+    fs::write(BASE_DIR.join("config.json"), config_str).map_err(|e| format!("无法写入文件: {e}"))?;
+    
+    Ok(())
 }

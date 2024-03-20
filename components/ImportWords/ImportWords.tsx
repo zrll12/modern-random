@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import {notifications} from "@mantine/notifications";
 
 export default function ImportWords(props: ImportWordsProps) {
     const [name, setName] = useState('');
@@ -32,7 +33,10 @@ export default function ImportWords(props: ImportWordsProps) {
             setType('json');
         } else if (value.type.includes('csv')) {
             setType('csv');
-        } else return;
+        } else {
+            notifications.show({title: "文件类型错误", message: "请上传 json 或 csv 文件", color: "red"});
+            return;
+        }
         value.text()
             .then((texts) => {
                 setContent(texts);
@@ -42,11 +46,19 @@ export default function ImportWords(props: ImportWordsProps) {
     async function saveWords() {
         const contentReplaced = content.replace('“', '"')
             .replace('”', '"');
+        if (!name || !contentReplaced) {
+            notifications.show({title: "错误", message: "名称和内容不能为空", color: "red"});
+            return;
+        }
         await invoke(type === 'json' ? 'create_list_from_json' : 'create_list_from_csv', {
             name,
             list: contentReplaced,
+        }).then(() => {
+            props.onClose();
+        }).catch((e: string) => {
+            notifications.show({title: "错误", message: e, color: "red"});
+            return;
         });
-        props.onClose();
     }
 
     return (

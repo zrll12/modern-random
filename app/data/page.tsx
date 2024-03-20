@@ -1,10 +1,10 @@
 'use client';
 
 import {
-    Button, CloseButton,
+    Button, Center, CloseButton,
     Divider,
     Group,
-    MantineColorScheme, Modal, NumberInput,
+    MantineColorScheme, Modal, NumberInput, Popover,
     RangeSlider, ScrollArea,
     SegmentedControl,
     Stack, Switch, Table, Text,
@@ -15,6 +15,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Config } from '@/model/Config';
 import ImportWords from '@/components/ImportWords/ImportWords';
+import {notifications} from "@mantine/notifications";
 
 export default function DataPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -56,7 +57,10 @@ export default function DataPage() {
     async function saveConfig() {
         await invoke('set_config', { config: JSON.stringify(config) })
             .then(() => {
+                notifications.show({ title: '保存成功', message: '配置已保存', color: 'teal', withBorder: true });
                 setModify(false);
+            }).catch((reason: string) => {
+                notifications.show({ title: '保存失败', message: reason, color: 'red', withBorder: true });
             });
     }
 
@@ -122,7 +126,11 @@ export default function DataPage() {
     }
 
     function handleFinishCreateFile() {
-        updateFileIndex().then(() => {});
+        updateFileIndex().then(() => {
+            notifications.show({ title: '导入成功', message: '词汇表已导入', color: 'teal', withBorder: true });
+        }).catch((reason: string) => {
+            notifications.show({ title: '导入失败', message: reason, color: 'red', withBorder: true });
+        });
         importMovement.close();
     }
 
@@ -134,13 +142,25 @@ export default function DataPage() {
                 `${(element[1] / 1024).toFixed(3)} KB`}
             </Table.Td>
             <Table.Td>
-                <CloseButton onClick={() => {
-                    invoke('remove_list', { name: element[0] })
-                        .then(() => {
-                            updateFileIndex().then(() => {});
-                        });
-                }}
-                />
+                <Popover width={200} position="bottom" withArrow shadow="md">
+                    <Popover.Target>
+                        <CloseButton />
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                        <Stack gap={"xs"}>
+                            <Text>确定要删除吗</Text>
+                            <Text size="xs">文件将立即删除且无法恢复</Text>
+                            <Button size={"xs"} fullWidth color={"red"} onClick={() => {
+                                invoke('remove_list', { name: element[0] })
+                                    .then(() => {
+                                        updateFileIndex().then(() => {
+                                            notifications.show({ title: '删除成功', message: '词汇表已删除', color: 'teal', withBorder: true });
+                                        });
+                                    });
+                            }}>删除</Button>
+                        </Stack>
+                    </Popover.Dropdown>
+                </Popover>
             </Table.Td>
         </Table.Tr>
     ));

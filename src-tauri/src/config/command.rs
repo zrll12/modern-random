@@ -4,15 +4,16 @@ use crate::config::model::Config;
 use crate::config::CONFIG;
 
 #[tauri::command]
-pub async fn set_config(config: String) {
-    let new_config: Config = serde_json::from_slice(&config.as_bytes()).unwrap();
+pub async fn set_config(config: String) -> Result<(), String> {
+    let new_config: Config = serde_json::from_slice(&config.as_bytes()).map_err(|_| {"无法格式化配置文件"})?;
 
-    save_config(new_config.clone()).await;
+    save_config(new_config.clone()).await?;
 
     let mut config = CONFIG.lock().unwrap();
     config.number = new_config.number.clone();
 
     drop(config);
+    Ok(())
 }
 
 #[tauri::command]

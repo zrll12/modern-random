@@ -5,6 +5,7 @@ import { theme } from '@/theme';
 import { AppNavbar } from '@/components/AppNavbar/AppNavbar';
 import './global.css';
 import '@mantine/notifications/styles.css';
+import {Notifications} from "@mantine/notifications";
 
 export const metadata = {
     title: 'Mantine Next.js template',
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: any }) {
             />
         </head>
         <body>
-        <MantineProvider theme={theme}><AppNavbar>{children}</AppNavbar></MantineProvider>
+        <MantineProvider theme={theme}>
+            <Notifications position={"top-right"} w={300}/>
+            <AppNavbar>{children}</AppNavbar>
+        </MantineProvider>
         </body>
         </html>
     );
