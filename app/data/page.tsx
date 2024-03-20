@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    Button, Center, CloseButton,
+    Button, CloseButton,
     Divider,
     Group,
     MantineColorScheme, Modal, NumberInput, Popover,
@@ -13,9 +13,9 @@ import {
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import { Config } from '@/model/Config';
 import ImportWords from '@/components/ImportWords/ImportWords';
-import {notifications} from "@mantine/notifications";
 
 export default function DataPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
@@ -24,6 +24,7 @@ export default function DataPage() {
     const [importOpened, importMovement] = useDisclosure(false);
     const [files, setFiles] = useState<[string, number][]>([]);
     const [baseDir, setBaseDir] = useState('' as string);
+    const [restartNotify, setRestartNotify] = useState(false);
 
     const sliderMarks = [
         { value: 20, label: '20' },
@@ -62,6 +63,10 @@ export default function DataPage() {
             }).catch((reason: string) => {
                 notifications.show({ title: '保存失败', message: reason, color: 'red', withBorder: true });
             });
+        if (restartNotify) {
+            notifications.show({ title: '需要重新启动', message: '您所作的更改需要重新启动应用', color: 'yellow', withBorder: true });
+            setRestartNotify(false);
+        }
     }
 
     function onNumberChange(value: number[]) {
@@ -71,6 +76,7 @@ export default function DataPage() {
 
             return {
                 color: c.color,
+                scale: c.scale,
                 number: {
                     min,
                     max,
@@ -84,6 +90,7 @@ export default function DataPage() {
         setModify(true);
         setConfig((c) => ({
             color: c.color,
+            scale: c.scale,
             number: {
                 min: c.number.min,
                 max: c.number.max,
@@ -96,6 +103,7 @@ export default function DataPage() {
         setModify(true);
         setConfig((c) => ({
                 color: c.color,
+                scale: c.scale,
                 number: {
                     min: value as number,
                     max: c.number.max,
@@ -108,6 +116,7 @@ export default function DataPage() {
         setModify(true);
         setConfig((c) => ({
                 color: c.color,
+                scale: c.scale,
                 number: {
                     min: c.number.min,
                     max: value as number,
@@ -120,9 +129,20 @@ export default function DataPage() {
         setColorScheme(value as MantineColorScheme);
         setConfig((c) => ({
             color: value,
+            scale: c.scale,
             number: c.number,
         }));
         setModify(true);
+    }
+
+    function handleScaleChange(value: string | number) {
+        setConfig((c) => ({
+            color: c.color,
+            scale: value as number,
+            number: c.number,
+        }));
+        setModify(true);
+        setRestartNotify(true);
     }
 
     function handleFinishCreateFile() {
@@ -147,17 +167,23 @@ export default function DataPage() {
                         <CloseButton />
                     </Popover.Target>
                     <Popover.Dropdown>
-                        <Stack gap={"xs"}>
+                        <Stack gap="xs">
                             <Text>确定要删除吗</Text>
                             <Text size="xs">文件将立即删除且无法恢复</Text>
-                            <Button size={"xs"} fullWidth color={"red"} onClick={() => {
+                            <Button
+                              size="xs"
+                              fullWidth
+                              color="red"
+                              onClick={() => {
                                 invoke('remove_list', { name: element[0] })
                                     .then(() => {
                                         updateFileIndex().then(() => {
                                             notifications.show({ title: '删除成功', message: '词汇表已删除', color: 'teal', withBorder: true });
                                         });
                                     });
-                            }}>删除</Button>
+                            }}
+                            >删除
+                            </Button>
                         </Stack>
                     </Popover.Dropdown>
                 </Popover>
@@ -256,6 +282,15 @@ export default function DataPage() {
                             ]}
                           value={colorScheme}
                           onChange={handleColorSchemeChange}
+                        />
+                    </Group>
+
+                    <Group>
+                        放大大小
+                        <NumberInput
+                          value={config.scale}
+                          onChange={handleScaleChange}
+                          placeholder="放大大小"
                         />
                     </Group>
 

@@ -1,7 +1,7 @@
 use crate::BASE_DIR;
+use crate::config::CONFIG;
 use crate::config::fs::save_config;
 use crate::config::model::Config;
-use crate::config::CONFIG;
 
 #[tauri::command]
 pub async fn set_config(config: String) -> Result<(), String> {
@@ -26,6 +26,12 @@ pub async fn get_config() -> String {
 pub fn get_color() -> String {
     let config = &CONFIG.lock().unwrap();
     config.color.clone()
+}
+
+#[tauri::command]
+pub fn get_scale() -> f32 {
+    let config = &CONFIG.lock().unwrap();
+    config.scale
 }
 
 #[tauri::command]

@@ -1,18 +1,26 @@
+'use client';
+
 import '@mantine/core/styles.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { theme } from '@/theme';
+import { Notifications } from '@mantine/notifications';
+import { getTheme, theme } from '@/theme';
 import { AppNavbar } from '@/components/AppNavbar/AppNavbar';
 import './global.css';
 import '@mantine/notifications/styles.css';
-import {Notifications} from "@mantine/notifications";
 
-export const metadata = {
-    title: 'Mantine Next.js template',
-    description: 'I am using Mantine with Next.js!',
-};
+// export const metadata = {
+//     title: 'Mantine Next.js template',
+//     description: 'I am using Mantine with Next.js!',
+// };
 
 export default function RootLayout({ children }: { children: any }) {
+    const [tempTheme, setTheme] = useState(theme);
+
+    useEffect(() => {
+        getTheme().then((t) => setTheme(t));
+    }, []);
+
     return (
         <html lang="en">
         <head>
@@ -22,10 +30,11 @@ export default function RootLayout({ children }: { children: any }) {
               name="viewport"
               content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
             />
+            <title>随机数生成器</title>
         </head>
         <body>
-        <MantineProvider theme={theme}>
-            <Notifications position={"top-right"} w={300}/>
+        <MantineProvider theme={tempTheme}>
+            <Notifications position="top-right" w={300} />
             <AppNavbar>{children}</AppNavbar>
         </MantineProvider>
         </body>

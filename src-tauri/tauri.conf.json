@@ -13,8 +13,7 @@
       {
         "title": "random",
         "width": 800,
-        "height": 600,
-        "resizable": false
+        "height": 600
       }
     ],
     "security": {

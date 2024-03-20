@@ -1,7 +1,7 @@
-use std::fmt::format;
-use crate::config::model::{Config, NumberConfig, NumberSelectType};
 use std::fs;
+
 use crate::BASE_DIR;
+use crate::config::model::{Config, NumberConfig, NumberSelectType};
 
 pub async fn get_config() -> Config {
     let vec = fs::read(BASE_DIR.join("config.json")).unwrap_or_else(|_| Vec::new());
@@ -11,6 +11,7 @@ pub async fn get_config() -> Config {
             println!("{:?}", e);
             let config = Config {
                 color: "auto".to_string(),
+                scale: 1.0,
                 number: NumberConfig {
                     min: 0,
                     max: 100,

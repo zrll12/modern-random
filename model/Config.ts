@@ -1,5 +1,6 @@
 export interface Config {
-    color: string
+    color: string,
+    scale: number,
     number: Number
 }
 

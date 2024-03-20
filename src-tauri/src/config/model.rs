@@ -6,6 +6,8 @@ use serde_inline_default::serde_inline_default;
 pub struct Config {
     #[serde_inline_default(String::from("auto"))]
     pub color: String,
+    #[serde_inline_default(1.0)]
+    pub scale: f32,
     #[serde(default = "generate_number_config")]
     pub number: NumberConfig,
 }

@@ -17,6 +17,7 @@ import {
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { Config } from '@/model/Config';
+import { theme } from '@/theme';
 
 export default function RandomPicker() {
     const { setColorScheme } = useMantineColorScheme();
@@ -44,6 +45,7 @@ export default function RandomPicker() {
         const configStruct: Config = JSON.parse(configStr);
         setConfig(configStruct);
         setColorScheme(configStruct.color as MantineColorScheme);
+        theme.scale = configStruct.scale;
     }
 
     async function updateFileIndex() {
