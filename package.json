@@ -1,6 +1,6 @@
 {
-  "name": "mantine-next-template",
-  "version": "1.0.0",
+  "name": "random-app",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
