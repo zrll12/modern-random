@@ -1,9 +1,10 @@
 import '@mantine/core/styles.css';
 import React from 'react';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { theme } from '../theme';
+import { theme } from '@/theme';
 import { AppNavbar } from '@/components/AppNavbar/AppNavbar';
 import './global.css';
+import '@mantine/notifications/styles.css';
 
 export const metadata = {
     title: 'Mantine Next.js template',
