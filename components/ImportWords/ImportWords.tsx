@@ -49,11 +49,11 @@ export default function ImportWords(props: ImportWordsProps) {
             notifications.show({ title: '错误', message: '名称和内容不能为空', color: 'red' });
             return;
         }
-        await invoke(type === 'json' ? 'create_list_from_json' : 'create_list_from_csv', {
+        invoke(type === 'json' ? 'create_list_from_json' : 'create_list_from_csv', {
             name,
             list: contentReplaced,
         }).then(() => {
-            props.onClose();
+            props.onClose(true);
         }).catch((e: string) => {
             notifications.show({ title: '错误', message: e, color: 'red' });
         });
@@ -94,7 +94,7 @@ export default function ImportWords(props: ImportWordsProps) {
                 <Button
                   color="red"
                   variant="light"
-                  onClick={props.onClose}
+                  onClick={() => { props.onClose(false); }}
                 >取消
                 </Button>
                 <Button onClick={saveWords}>保存</Button>
@@ -104,5 +104,5 @@ export default function ImportWords(props: ImportWordsProps) {
 }
 
 export interface ImportWordsProps {
-    onClose: () => void;
+    onClose: (changed: boolean) => void;
 }

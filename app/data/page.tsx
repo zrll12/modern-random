@@ -17,6 +17,8 @@ import { notifications } from '@mantine/notifications';
 import { Config } from '@/model/Config';
 import ImportWords from '@/components/ImportWords/ImportWords';
 
+let restartNotified: boolean = false;
+
 export default function DataPage() {
     const { colorScheme, setColorScheme } = useMantineColorScheme();
     const [checked, setChecked] = useState(false);
@@ -63,9 +65,10 @@ export default function DataPage() {
             }).catch((reason: string) => {
                 notifications.show({ title: '保存失败', message: reason, color: 'red', withBorder: true });
             });
-        if (restartNotify) {
-            notifications.show({ title: '需要重新启动', message: '您所作的更改需要重新启动应用', color: 'yellow', withBorder: true });
+        if (restartNotify && !restartNotified) {
+            notifications.show({ title: '需要重新启动', message: '您所作的更改需要重新启动应用', color: 'yellow', withBorder: true, withCloseButton: false });
             setRestartNotify(false);
+            restartNotified = true;
         }
     }
 
@@ -145,13 +148,16 @@ export default function DataPage() {
         setRestartNotify(true);
     }
 
-    function handleFinishCreateFile() {
+    function handleFinishCreateFile(changed: boolean) {
+        importMovement.close();
+        if (!changed) {
+            return;
+        }
         updateFileIndex().then(() => {
             notifications.show({ title: '导入成功', message: '词汇表已导入', color: 'teal', withBorder: true });
         }).catch((reason: string) => {
             notifications.show({ title: '导入失败', message: reason, color: 'red', withBorder: true });
         });
-        importMovement.close();
     }
 
     const rows = files.map((element) => (
@@ -178,7 +184,7 @@ export default function DataPage() {
                                 invoke('remove_list', { name: element[0] })
                                     .then(() => {
                                         updateFileIndex().then(() => {
-                                            notifications.show({ title: '删除成功', message: '词汇表已删除', color: 'teal', withBorder: true });
+                                            notifications.show({ title: '删除成功', message: '词汇表已删除', color: 'yellow', withBorder: true });
                                         });
                                     });
                             }}
