@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import {notifications} from "@mantine/notifications";
+import { notifications } from '@mantine/notifications';
 
 export default function ImportWords(props: ImportWordsProps) {
     const [name, setName] = useState('');
@@ -34,8 +34,7 @@ export default function ImportWords(props: ImportWordsProps) {
         } else if (value.type.includes('csv')) {
             setType('csv');
         } else {
-            notifications.show({title: "文件类型错误", message: "请上传 json 或 csv 文件", color: "red"});
-            return;
+            notifications.show({ title: '文件类型错误', message: '文件似乎并不是json和csv文件，请自行确认内容正确性', color: 'yellow' });
         }
         value.text()
             .then((texts) => {
@@ -47,7 +46,7 @@ export default function ImportWords(props: ImportWordsProps) {
         const contentReplaced = content.replace('“', '"')
             .replace('”', '"');
         if (!name || !contentReplaced) {
-            notifications.show({title: "错误", message: "名称和内容不能为空", color: "red"});
+            notifications.show({ title: '错误', message: '名称和内容不能为空', color: 'red' });
             return;
         }
         await invoke(type === 'json' ? 'create_list_from_json' : 'create_list_from_csv', {
@@ -56,8 +55,7 @@ export default function ImportWords(props: ImportWordsProps) {
         }).then(() => {
             props.onClose();
         }).catch((e: string) => {
-            notifications.show({title: "错误", message: e, color: "red"});
-            return;
+            notifications.show({ title: '错误', message: e, color: 'red' });
         });
     }
 
